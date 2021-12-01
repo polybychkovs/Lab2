@@ -29,7 +29,7 @@ public class Main {
         private JTextField textFieldZ;
 
         private JTextField textFieldResult;
-
+        private JTextField textFieldMemory;
 
         private ButtonGroup radioButtons = new ButtonGroup();
 
@@ -37,7 +37,8 @@ public class Main {
 
         private int formulaId = 1;
 
-
+        private Double result;
+        private Double memory = 0.;
 
         public Double calculate1(Double x, Double y, Double z) {
             return Math.sqrt((Math.sin(y)+(y*y)+Math.pow(Math.E,Math.cos(y)))+Math.pow(Math.log(z*z)+Math.sin((x*x)*Math.PI),3));
@@ -115,6 +116,19 @@ public class Main {
             hboxResult.add(Box.createHorizontalGlue());
             hboxResult.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 
+//создание области для вывода памяти
+            JLabel labelForMemory = new JLabel("Память:");
+            textFieldMemory = new JTextField("0",15);
+            textFieldMemory.setMaximumSize(
+                    textFieldMemory.getPreferredSize());
+
+            Box hboxMemory = Box.createHorizontalBox();
+            hboxResult.add(Box.createHorizontalGlue());
+            hboxResult.add(labelForMemory);
+            hboxResult.add(Box.createHorizontalStrut(10));
+            hboxResult.add(textFieldMemory);
+            hboxResult.add(Box.createHorizontalGlue());
+            hboxResult.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 
 // Создать область для кнопок
@@ -141,7 +155,21 @@ public class Main {
                     }
                 }
             });
+//создание кнопки "M+"
+            JButton calculate = new JButton("M+");
+            calculate.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ev) {
+                    try {
+                        Double result = Double.parseDouble(textFieldResult.getText());
+                        memory+=result;
+                        textFieldMemory.setText(memory.toString());
 
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(MainFrame.this,
+                                "Ошибка в формате записи числа с плавающей точкой", "Ошибочный формат числа",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+                }
             });
 //создание кнопки "ОЧИСТИТЬ ПОЛЯ"
             JButton buttonReset = new JButton("Очистить");
@@ -153,7 +181,6 @@ public class Main {
                     textFieldResult.setText("0");
                 }
             });
-
 
             Box hboxButtons = Box.createHorizontalBox();
             hboxButtons.add(Box.createHorizontalGlue());
@@ -173,6 +200,7 @@ public class Main {
             contentBox.add(hboxFormulaType);
             contentBox.add(hboxVariables);
             contentBox.add(hboxResult);
+            contentBox.add(hboxMemory);
             contentBox.add(hboxButtons);
             contentBox.add(Box.createVerticalGlue());
             getContentPane().add(contentBox, BorderLayout.CENTER);
